@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a session | BraidzbyKN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main: #fff8eb;
+            --secondary: #4c271d;
+            --secondary-soft: rgba(76, 39, 29, 0.68);
+            --line: rgba(76, 39, 29, 0.2);
+            --serif: "Playfair Display", "Bodoni MT", Didot, Georgia, "Times New Roman", serif;
+            --sans: var(--serif);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--secondary);
+            font-family: var(--sans);
+            font-weight: 400;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            font-variant-numeric: lining-nums;
+            background: #fff8eb linear-gradient(135deg, #fff8eb 0%, #fff8eb 30%, #fdeccc 70%, #f9e0bb 100%) fixed;
+        }
+
+        a { color: inherit; }
+        button { font: inherit; color: inherit; }
+        [hidden] { display: none !important; }
+
+        :focus-visible {
+            outline: 2px solid var(--secondary);
+            outline-offset: 3px;
+            border-radius: 2px;
+        }
+
+        /* ---------- Header ---------- */
+        .site-header {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.4rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 88px;
+            height: 88px;
+        }
+
+        .logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.6rem 0;
+            border: 0;
+            background: none;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .burger,
+        .burger::before,
+        .burger::after {
+            display: block;
+            width: 22px;
+            height: 1.5px;
+            background: var(--secondary);
+        }
+
+        .burger { position: relative; }
+        .burger::before, .burger::after { content: ""; position: absolute; left: 0; }
+        .burger::before { top: -7px; }
+        .burger::after { top: 7px; }
+
+        .menu-toggle[aria-expanded="true"] .burger { background: transparent; }
+        .menu-toggle[aria-expanded="true"] .burger::before { top: 0; transform: rotate(45deg); }
+        .menu-toggle[aria-expanded="true"] .burger::after { top: 0; transform: rotate(-45deg); }
+
+        .menu-bar {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 2rem;
+            z-index: 20;
+            width: min(260px, calc(100vw - 2rem));
+            padding: 0.8rem 1.4rem;
+            background: var(--main);
+            border: 1px solid var(--secondary);
+        }
+
+        .menu-bar ul { list-style: none; margin: 0; padding: 0; }
+        .menu-bar li + li { border-top: 1px solid var(--line); }
+
+        .menu-bar a,
+        .submenu-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.7rem 0;
+            border: 0;
+            background: none;
+            text-align: left;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .menu-bar a:hover,
+        .submenu-toggle:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+        .menu-bar .active > a { font-weight: 500; }
+
+        .submenu-toggle::after {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-right: 1.5px solid var(--secondary);
+            border-bottom: 1.5px solid var(--secondary);
+            transform: rotate(45deg);
+            margin-right: 3px;
+        }
+
+        .submenu-toggle[aria-expanded="true"]::after { transform: rotate(-135deg); }
+
+        .submenu { padding: 0 0 0.5rem 1rem; }
+        .submenu li + li { border-top: 0; }
+        .submenu a { padding: 0.4rem 0; }
+
+        /* ---------- Page ---------- */
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3.5rem 2rem 5rem;
+        }
+
+        h1, h2 {
+            margin: 0 0 0.6rem;
+            font-family: var(--serif);
+            font-weight: 500;
+            line-height: 1.1;
+        }
+
+        h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); }
+        h2 { font-size: 1.6rem; }
+
+        .intro { margin: 0 0 2.5rem; color: var(--secondary-soft); }
+
+        .booking-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+            gap: 3.5rem;
+            align-items: start;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            border: 1px solid var(--secondary);
+            border-radius: 999px;
+            font-size: 0.98rem;
+            font-weight: 400;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-solid { background: var(--secondary); color: var(--main); }
+        .btn-solid:hover { background: transparent; color: var(--secondary); }
+
+        /* ---------- Calendar ---------- */
+        .calendar { padding: 1.5rem; border: 1px solid var(--secondary); }
+
+        .cal-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+
+        .cal-month { font-family: var(--serif); font-size: 1.4rem; font-weight: 500; }
+
+        .cal-arrow {
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .cal-arrow:hover:not(:disabled) { border-color: var(--secondary); }
+        .cal-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+
+        .cal-dow {
+            padding: 0.3rem 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--secondary-soft);
+        }
+
+        .cal-day {
+            aspect-ratio: 1;
+            border: 1px solid transparent;
+            border-radius: 50%;
+            background: none;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .cal-day:hover:not(:disabled) { border-color: var(--secondary); }
+        .cal-day:disabled { opacity: 0.3; cursor: not-allowed; }
+        .cal-day.today { text-decoration: underline; text-underline-offset: 4px; }
+        .cal-day[aria-pressed="true"] { background: var(--secondary); color: var(--main); }
+
+        /* ---------- Times and details ---------- */
+        .placeholder { margin: 0; color: var(--secondary-soft); }
+
+        .chosen-date { margin: 0 0 1.5rem; font-weight: 500; }
+
+        .booking-form { display: grid; gap: 1.6rem; max-width: 30rem; }
+
+        fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
+
+        .field label,
+        .field legend {
+            display: block;
+            margin-bottom: 0.2rem;
+            padding: 0;
+            font-size: 0.92rem;
+            font-weight: 400;
+        }
+
+        .field input[type="text"],
+        .field input[type="email"],
+        .field input[type="tel"] {
+            width: 100%;
+            padding: 0.55rem 0;
+            border: 0;
+            border-bottom: 1px solid var(--secondary);
+            border-radius: 0;
+            background: transparent;
+            color: var(--secondary);
+            font: inherit;
+            font-size: 1.05rem;
+        }
+
+        .field input:focus { outline: none; box-shadow: 0 1px 0 0 var(--secondary); }
+
+        .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 0.4rem; }
+
+        .slot { position: relative; }
+        .slot input { position: absolute; opacity: 0; pointer-events: none; }
+
+        .slot label {
+            display: block;
+            margin: 0;
+            padding: 0.6rem 0;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            text-align: center;
+            font-size: 0.92rem;
+            cursor: pointer;
+        }
+
+        .slot label:hover { border-color: var(--secondary); }
+        .slot input:checked + label { background: var(--secondary); color: var(--main); border-color: var(--secondary); }
+        .slot input:focus-visible + label { outline: 2px solid var(--secondary); outline-offset: 3px; }
+        .slot input:disabled + label { opacity: 0.3; cursor: not-allowed; border-color: var(--line); }
+
+        .summary { margin: 0; font-weight: 500; }
+        .booking-form .btn { justify-self: start; }
+
+        /* ---------- Confirmation ---------- */
+        .done { max-width: 34rem; }
+        .done p { margin: 0 0 1.6rem; color: var(--secondary-soft); }
+        .done .btn { margin-right: 0.8rem; }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 820px) {
+            .site-header { padding: 1rem 1.25rem; }
+            .menu-bar { right: 1.25rem; }
+            .section { padding: 2.5rem 1.25rem 4rem; }
+            .booking-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="logo" href="index.html" aria-label="Home">
+            <!-- Space reserved for the logo. The image hides itself if the file isn't found. -->
+            <img src="images/logo/bbkn-logo.png" alt="" onerror="this.style.display='none'">
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="menu">
+            <span class="burger" aria-hidden="true"></span>
+            <span>Menu</span>
+        </button>
+
+        <nav class="menu-bar" id="menu" aria-label="Main" hidden>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="braids.html">Braids</a></li>
+                <li class="active"><a href="bookings.html" aria-current="page">Bookings</a></li>
+                <li>
+                    <button type="button" class="submenu-toggle" id="loginToggle" aria-expanded="false" aria-controls="loginSub">Login</button>
+                    <ul class="submenu" id="loginSub" hidden>
+                        <li><a href="index.html#login">Log in</a></li>
+                        <li><a href="signup.html">New here? Sign up</a></li>
+                    </ul>
+                </li>
+                <li><a href="logout.html">Logout</a></li>
+                <li><a href="aboutUs.html">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="section">
+        <div id="bookingView">
+            <h1>Book a session</h1>
+            <p class="intro">Choose a date, pick a time, then confirm your booking.</p>
+
+            <div class="booking-grid">
+                <!-- Calendar -->
+                <section class="calendar" aria-label="Choose a date">
+                    <div class="cal-nav">
+                        <button type="button" class="cal-arrow" id="prevMonth" aria-label="Previous month">&lsaquo;</button>
+                        <span class="cal-month" id="calMonth" aria-live="polite"></span>
+                        <button type="button" class="cal-arrow" id="nextMonth" aria-label="Next month">&rsaquo;</button>
+                    </div>
+                    <div class="cal-grid" id="calGrid"></div>
+                </section>
+
+                <!-- Time and details -->
+                <section aria-label="Choose a time and confirm">
+                    <p class="placeholder" id="datePrompt">Select a date to see available times.</p>
+
+                    <form class="booking-form" id="bookingForm" hidden>
+                        <div>
+                            <h2>Select a time</h2>
+                            <p class="chosen-date" id="chosenDate"></p>
+                        </div>
+
+                        <fieldset class="field">
+                            <legend class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Available times</legend>
+                            <div class="slots" id="slots"></div>
+                            <p class="placeholder" id="noTimes" hidden>No times left on this date. Please choose another day.</p>
+                        </fieldset>
+
+                        <div class="field">
+                            <label for="bName">Name</label>
+                            <input type="text" id="bName" autocomplete="name" required />
+                        </div>
+                        <div class="field">
+                            <label for="bPhone">Phone number</label>
+                            <input type="tel" id="bPhone" autocomplete="tel" pattern="[0-9+()\s\-]{7,}" title="Enter a phone number, for example 07123 456789" required />
+                        </div>
+                        <div class="field">
+                            <label for="bEmail">Email</label>
+                            <input type="email" id="bEmail" autocomplete="email" required />
+                        </div>
+
+                        <p class="summary" id="summary" aria-live="polite"></p>
+                        <button type="submit" class="btn btn-solid">Confirm booking</button>
+                    </form>
+                </section>
+            </div>
+        </div>
+
+        <!-- Confirmation -->
+        <div class="done" id="doneView" hidden>
+            <h1 id="doneTitle" tabindex="-1">Booking confirmed</h1>
+            <p id="doneText"></p>
+            <a class="btn btn-solid" href="index.html">Back to home</a>
+            <button type="button" class="btn" id="another" style="background:none;">Book another session</button>
+        </div>
+    </main>
+
+    <script>
+        /* ---------- Collapsible menu ---------- */
+        (function () {
+            var toggle = document.getElementById("menuToggle");
+            var menu = document.getElementById("menu");
+            var loginToggle = document.getElementById("loginToggle");
+            var loginSub = document.getElementById("loginSub");
+
+            function setMenu(open) {
+                menu.hidden = !open;
+                toggle.setAttribute("aria-expanded", String(open));
+            }
+
+            toggle.addEventListener("click", function () { setMenu(menu.hidden); });
+
+            loginToggle.addEventListener("click", function () {
+                var open = loginSub.hidden;
+                loginSub.hidden = !open;
+                loginToggle.setAttribute("aria-expanded", String(open));
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!menu.hidden && !menu.contains(e.target) && !toggle.contains(e.target)) setMenu(false);
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape" && !menu.hidden) { setMenu(false); toggle.focus(); }
+            });
+        })();
+
+        /* ---------- Booking calendar ---------- */
+        (function () {
+            // Edit these to match your working hours (h = hour in 24h time, m = minutes)
+            var TIMES = [
+                { label: "9:00 AM",  h: 9,  m: 0 },
+                { label: "10:30 AM", h: 10, m: 30 },
+                { label: "12:00 PM", h: 12, m: 0 },
+                { label: "1:30 PM",  h: 13, m: 30 },
+                { label: "3:00 PM",  h: 15, m: 0 },
+                { label: "4:30 PM",  h: 16, m: 30 }
+            ];
+            var DOW = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+            var calGrid = document.getElementById("calGrid");
+            var calMonth = document.getElementById("calMonth");
+            var prevBtn = document.getElementById("prevMonth");
+            var nextBtn = document.getElementById("nextMonth");
+            var datePrompt = document.getElementById("datePrompt");
+            var form = document.getElementById("bookingForm");
+            var slotsEl = document.getElementById("slots");
+            var noTimes = document.getElementById("noTimes");
+            var chosenDate = document.getElementById("chosenDate");
+            var summary = document.getElementById("summary");
+            var bookingView = document.getElementById("bookingView");
+            var doneView = document.getElementById("doneView");
+
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            var viewYear = today.getFullYear();
+            var viewMonth = today.getMonth();
+            var selected = null;
+
+            function longDate(d) {
+                return d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+            }
+
+            function renderCalendar() {
+                calGrid.innerHTML = "";
+                calMonth.textContent = new Date(viewYear, viewMonth, 1)
+                    .toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+                prevBtn.disabled = viewYear === today.getFullYear() && viewMonth === today.getMonth();
+
+                DOW.forEach(function (d) {
+                    var el = document.createElement("div");
+                    el.className = "cal-dow";
+                    el.textContent = d;
+                    calGrid.appendChild(el);
+                });
+
+                var offset = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7; // week starts Monday
+                for (var i = 0; i < offset; i++) calGrid.appendChild(document.createElement("div"));
+
+                var days = new Date(viewYear, viewMonth + 1, 0).getDate();
+                for (var n = 1; n <= days; n++) {
+                    (function (n) {
+                        var date = new Date(viewYear, viewMonth, n);
+                        var btn = document.createElement("button");
+                        btn.type = "button";
+                        btn.className = "cal-day" + (date.getTime() === today.getTime() ? " today" : "");
+                        btn.textContent = n;
+                        btn.setAttribute("aria-label", longDate(date));
+                        btn.setAttribute("aria-pressed", String(!!selected && selected.getTime() === date.getTime()));
+                        btn.disabled = date < today;
+                        btn.addEventListener("click", function () { chooseDate(date); });
+                        calGrid.appendChild(btn);
+                    })(n);
+                }
+            }
+
+            function renderSlots() {
+                slotsEl.innerHTML = "";
+                var now = new Date();
+                var isToday = selected.getTime() === today.getTime();
+                var available = 0;
+
+                TIMES.forEach(function (t, i) {
+                    var past = isToday && (t.h < now.getHours() || (t.h === now.getHours() && t.m <= now.getMinutes()));
+                    if (!past) available++;
+
+                    var wrap = document.createElement("div");
+                    wrap.className = "slot";
+                    var input = document.createElement("input");
+                    input.type = "radio";
+                    input.name = "time";
+                    input.id = "slot" + i;
+                    input.value = t.label;
+                    input.required = true;
+                    input.disabled = past;
+                    var label = document.createElement("label");
+                    label.htmlFor = input.id;
+                    label.textContent = t.label;
+                    wrap.appendChild(input);
+                    wrap.appendChild(label);
+                    slotsEl.appendChild(wrap);
+                });
+
+                noTimes.hidden = available > 0;
+            }
+
+            function updateSummary() {
+                var time = form.querySelector('input[name="time"]:checked');
+                summary.textContent = time ? longDate(selected) + " at " + time.value : "";
+            }
+
+            function chooseDate(date) {
+                selected = date;
+                datePrompt.hidden = true;
+                form.hidden = false;
+                chosenDate.textContent = longDate(date);
+                renderSlots();
+                updateSummary();
+                renderCalendar();
+                var first = slotsEl.querySelector("input:not(:disabled)");
+                if (first) first.focus();
+            }
+
+            slotsEl.addEventListener("change", updateSummary);
+
+            prevBtn.addEventListener("click", function () {
+                viewMonth--;
+                if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+                renderCalendar();
+            });
+
+            nextBtn.addEventListener("click", function () {
+                viewMonth++;
+                if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+                renderCalendar();
+            });
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                var time = form.querySelector('input[name="time"]:checked');
+                if (!selected || !time) return;
+
+                var booking = {
+                    date: longDate(selected),
+                    time: time.value,
+                    name: document.getElementById("bName").value.trim(),
+                    phone: document.getElementById("bPhone").value.trim(),
+                    email: document.getElementById("bEmail").value.trim()
+                };
+                // Send `booking` to your server here.
+
+                document.getElementById("doneText").textContent =
+                    "Thank you, " + booking.name + ". Your session is booked for " + booking.date +
+                    " at " + booking.time + ". A confirmation will be sent to " + booking.email + ".";
+                bookingView.hidden = true;
+                doneView.hidden = false;
+                document.getElementById("doneTitle").focus();
+            });
+
+            document.getElementById("another").addEventListener("click", function () {
+                form.reset();
+                selected = null;
+                form.hidden = true;
+                datePrompt.hidden = false;
+                renderCalendar();
+                doneView.hidden = true;
+                bookingView.hidden = false;
+            });
+
+            renderCalendar();
+        })();
+    </script>
+</body>
+
+</html>
